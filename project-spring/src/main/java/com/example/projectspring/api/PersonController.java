@@ -3,7 +3,12 @@ package com.example.projectspring.api;
 import com.example.projectspring.model.Person;
 import com.example.projectspring.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@RequestMapping("api/v1/person")
+@RestController
 public class PersonController {
     private final PersonService personService;
 
@@ -12,7 +17,13 @@ public class PersonController {
         this.personService = personService;
     }
 
-    public void addPerspn(Person person) {
+    @PostMapping
+    public void addPerson(@RequestBody Person person) {
         personService.addPerson(person);
+    }
+
+    @GetMapping
+    public List<Person> getAllPeople(){
+        return personService.getAllPeople();
     }
 }
