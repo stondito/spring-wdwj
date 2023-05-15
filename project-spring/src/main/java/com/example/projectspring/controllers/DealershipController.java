@@ -6,6 +6,7 @@ import com.example.projectspring.models.Car;
 import com.example.projectspring.models.Dealership;
 import com.example.projectspring.models.Invoice;
 import com.example.projectspring.services.DealershipService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -17,14 +18,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/dealerships")
+@AllArgsConstructor
 public class DealershipController {
 
     private final DealershipService service;
-
-    @Autowired
-    public DealershipController(DealershipService service) {
-        this.service = service;
-    }
 
     @PostMapping(path = "/addCar")
     public ResponseEntity<Long> addCar(@RequestBody Car car) throws DealershipExceptions {
@@ -73,6 +70,11 @@ public class DealershipController {
     @DeleteMapping(path = "/dealership.remove/{id}")
     public void remove(@RequestParam Long id) throws DealershipExceptions {
         this.service.remove(id);
+    }
+
+    @PutMapping(path = "/update")
+    public ResponseEntity<Long> update(@RequestBody Dealership dealership) throws DealershipExceptions {
+        return ResponseEntity.ok(this.service.update(dealership));
     }
 
 }

@@ -1,16 +1,38 @@
 package com.example.projectspring.controllers;
 
+import com.example.projectspring.exceptions.SaleException;
+import com.example.projectspring.models.Sale;
 import com.example.projectspring.services.SaleService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/sale")
 @AllArgsConstructor
 public class SaleController {
 
-    private SaleService service;
+    private final SaleService service;
 
+    @GetMapping(path = "/get")
+    public Sale getSale(@RequestBody Long id) throws SaleException {
+        return service.getSale(id);
+    }
 
+    @DeleteMapping(path = "/delete")
+    public void deleteSale(@RequestBody Long id) throws SaleException {
+        service.deleteSell(id);
+    }
+
+    // todo
+    // sale have One to One with Car and invoice so need dto
+    @PostMapping(path = "/add")
+    public Long addSale(@RequestBody Sale sale) {
+        return service.add(sale);
+    }
+
+    @PutMapping(path = "/update")
+    public ResponseEntity<Long> update(@RequestBody Sale sale) throws SaleException {
+        return ResponseEntity.ok(this.service.update(sale));
+    }
 }

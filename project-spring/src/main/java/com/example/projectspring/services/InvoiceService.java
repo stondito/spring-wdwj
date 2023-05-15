@@ -1,7 +1,9 @@
 package com.example.projectspring.services;
 
+import com.example.projectspring.exceptions.InvoiceException;
 import com.example.projectspring.models.Invoice;
 import com.example.projectspring.repos.InvoiceRepositoryI;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,13 +14,9 @@ import java.util.List;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class InvoiceService {
     private final InvoiceRepositoryI invoiceRepository;
-
-    @Autowired
-    public InvoiceService(InvoiceRepositoryI invoiceRepository) {
-        this.invoiceRepository = invoiceRepository;
-    }
 
     public Long addInvoice(Invoice invoice) {
         log.debug("Adding invoice");
@@ -54,6 +52,20 @@ public class InvoiceService {
 
     Invoice getInvoiceByName(String name) {
         return invoiceRepository.findInvoiceByCustomerName(name);
+    }
+
+    public Long update(Invoice invoice) throws InvoiceException {
+        Invoice invoiceToUpdate = this.invoiceRepository
+                .findById(invoice.getId())
+                .orElseThrow(() -> new InvoiceException("Invoice not found"));
+
+        invoiceToUpdate.setPurchaseDate(invoice.getPurchaseDate());
+        invoiceToUpdate.setCustomerName(invoice.getCustomerName());
+        invoiceToUpdate.setId(invoice.getId());
+        invoiceToUpdate.setTaxRate(invoice.getTaxRate());
+        invoiceToUpdate.setSalesPrice(invoice.getSalesPrice());
+
+        return this.invoiceRepository.save(invoiceToUpdate).getId();
     }
 }
 

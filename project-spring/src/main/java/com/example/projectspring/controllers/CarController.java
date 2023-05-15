@@ -5,6 +5,7 @@ import com.example.projectspring.exceptions.DealershipExceptions;
 import com.example.projectspring.models.Car;
 import com.example.projectspring.models.Invoice;
 import com.example.projectspring.services.CarService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,19 +15,15 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 public class CarController {
 
-    private CarService carService;
+    private final CarService carService;
 
-    @Autowired
-    public CarController(CarService carService) {
-        this.carService = carService;
-    }
+    @PostMapping(path = "/add/{dealershipId}")
+    public ResponseEntity<Long> add(@Validated @RequestBody Car car, @PathVariable Long dealershipId) throws DealershipExceptions {
 
-    @PostMapping(path = "/add")
-    public ResponseEntity<Long> add(@Validated @RequestBody Car car) {
-
-        return ResponseEntity.ok(this.carService.addCar(car));
+        return ResponseEntity.ok(this.carService.addCar(car, dealershipId));
     }
 
     @DeleteMapping(path = "/car.delete/{id}")
@@ -59,5 +56,10 @@ public class CarController {
 
         return ResponseEntity
                 .ok(this.carService.sellCar(id, customerName));
+    }
+
+    @PutMapping(path = "/update")
+    public ResponseEntity<Long> update(@RequestBody Car car) throws CarException {
+        return ResponseEntity.ok(this.carService.update(car));
     }
 }

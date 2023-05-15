@@ -6,6 +6,7 @@ import com.example.projectspring.models.Car;
 import com.example.projectspring.models.Dealership;
 import com.example.projectspring.models.Invoice;
 import com.example.projectspring.repos.DealershipRepositoryI;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,23 +19,13 @@ import java.util.Map;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class DealershipService {
 
     private final CarService carService;
     private final InvoiceService invoiceService;
     private final DealershipRepositoryI dealershipRepository;
     private final SaleService saleService;
-
-    @Autowired
-    public DealershipService(CarService carService,
-                             InvoiceService invoiceService,
-                             DealershipRepositoryI dealershipRepository,
-                             SaleService saleService) {
-        this.carService = carService;
-        this.invoiceService = invoiceService;
-        this.dealershipRepository = dealershipRepository;
-        this.saleService = saleService;
-    }
 
     public Long addCar(Car car) throws DealershipExceptions {
 
@@ -46,7 +37,8 @@ public class DealershipService {
             throw new DealershipExceptions("Car car is null");
         }
 
-        return carService.addCar(car);
+        // todo dealership id
+        return carService.addCar(car, 1L);
     }
 
     public void removeCar(Long id) throws CarException {
@@ -110,7 +102,7 @@ public class DealershipService {
         List<Invoice> invoices = invoiceService.getInvoiceHistory();
 
         return invoices.stream()
-                .mapToDouble(a ->  a.getSalesPrice().doubleValue())
+                .mapToDouble(a -> a.getSalesPrice().doubleValue())
                 .sum();
     }
 
@@ -138,6 +130,19 @@ public class DealershipService {
         return this.dealershipRepository
                 .findById(id)
                 .orElseThrow(() -> new DealershipExceptions("Dealership not found"));
+    }
+
+    public Long update(Dealership dealership) throws DealershipExceptions {
+        Dealership dealershipToUpdate = getDealership(dealership.getId());
+
+        dealershipToUpdate.setAddress(dealership.getAddress());
+        dealershipToUpdate.setEmail(dealership.getEmail());
+        dealershipToUpdate.setId(dealership.getId());
+        dealershipToUpdate.setName(dealership.getName());
+        dealershipToUpdate.setCar(dealership.getCar());
+        dealershipToUpdate.setSalesPersonList(dealership.getSalesPersonList());
+
+        return this.dealershipRepository.save(dealershipToUpdate).getId();
     }
 
 }
