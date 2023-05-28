@@ -1,6 +1,8 @@
 package com.example.projectspring.services;
 
 import com.example.projectspring.config.AppConfig;
+import com.example.projectspring.config.ModelMapperConfig;
+import com.example.projectspring.dto.CarDto;
 import com.example.projectspring.exceptions.CarException;
 import com.example.projectspring.exceptions.DealershipExceptions;
 import com.example.projectspring.models.Car;
@@ -10,6 +12,7 @@ import com.example.projectspring.repos.CarRepositoryI;
 import com.example.projectspring.services.loggers.Logger;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,17 +29,19 @@ public class CarService {
     private final CarRepositoryI carRepository;
     private final SaleService saleService;
     private final InvoiceService invoiceService;
-    private final DealershipService dealershipService;
+    //private final DealershipService dealershipService;
+    private final ModelMapper mapper;
 
-    public Long addCar(Car car, Long dealershipId) throws DealershipExceptions {
+    public Long addCar(CarDto carDto, Dealership dealership) throws DealershipExceptions {
         log.debug("Adding car");
         log.info("Adding car");
         log.error("Adding car");
 
-        Dealership dealership = dealershipService.getDealership(dealershipId);
+        //Dealership dealership = dealershipService.getDealership(carDto.getDealershipId());
 
-        // if car already exists
-        car.setCarDealership(dealership);
+        Car car = mapper.map(carDto, Car.class);
+
+        //car.setCarDealership(dealership);
         Car car1 = carRepository.save(car);
 
         return car1.getId();

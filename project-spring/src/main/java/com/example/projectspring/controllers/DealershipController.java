@@ -1,5 +1,6 @@
 package com.example.projectspring.controllers;
 
+import com.example.projectspring.dto.CarDto;
 import com.example.projectspring.exceptions.CarException;
 import com.example.projectspring.exceptions.DealershipExceptions;
 import com.example.projectspring.models.Car;
@@ -23,13 +24,8 @@ public class DealershipController {
 
     private final DealershipService service;
 
-    @PostMapping(path = "/addCar")
-    public ResponseEntity<Long> addCar(@RequestBody Car car) throws DealershipExceptions {
-        return ResponseEntity.ok(this.service.addCar(car));
-    }
-
     @DeleteMapping(path = "/deleteCar/{id}")
-    public void removeCar(@RequestParam(name = "id") Long carId) throws CarException {
+    public void removeCar(@PathVariable(name = "id") Long carId) throws CarException {
         this.service.removeCar(carId);
     }
 
@@ -40,8 +36,8 @@ public class DealershipController {
     }
 
     @DeleteMapping(path = "/sellCar/{id}/{customerName}/")
-    public void sellCar(@RequestParam(name = "id") Long carId,
-                        @RequestParam String customerName,
+    public void sellCar(@PathVariable(name = "id") Long carId,
+                        @PathVariable String customerName,
                         @RequestBody BigDecimal price) throws CarException {
 
         this.service.sellCar(carId, customerName, price);
@@ -49,7 +45,7 @@ public class DealershipController {
 
 
     @GetMapping(path = "/sales/{make}")
-    public ResponseEntity<Map<String, Integer>> getSalesByMake(@RequestParam(name = "make") String make) {
+    public ResponseEntity<Map<String, Integer>> getSalesByMake(@PathVariable(name = "make") String make) {
 
         return ResponseEntity.ok(this.service.getSalesByMake(make));
     }
@@ -68,7 +64,7 @@ public class DealershipController {
     }
 
     @DeleteMapping(path = "/dealership.remove/{id}")
-    public void remove(@RequestParam Long id) throws DealershipExceptions {
+    public void remove(@PathVariable Long id) throws DealershipExceptions {
         this.service.remove(id);
     }
 

@@ -1,5 +1,6 @@
 package com.example.projectspring.services;
 
+import com.example.projectspring.dto.CarDto;
 import com.example.projectspring.exceptions.CarException;
 import com.example.projectspring.exceptions.DealershipExceptions;
 import com.example.projectspring.models.Car;
@@ -27,19 +28,6 @@ public class DealershipService {
     private final DealershipRepositoryI dealershipRepository;
     private final SaleService saleService;
 
-    public Long addCar(Car car) throws DealershipExceptions {
-
-        log.debug("Adding car");
-        log.info("Adding car");
-        log.error("Adding car");
-
-        if (car == null) {
-            throw new DealershipExceptions("Car car is null");
-        }
-
-        // todo dealership id
-        return carService.addCar(car, 1L);
-    }
 
     public void removeCar(Long id) throws CarException {
         log.debug("Remove car");
@@ -126,7 +114,7 @@ public class DealershipService {
         this.dealershipRepository.delete(dealership);
     }
 
-    Dealership getDealership(Long id) throws DealershipExceptions {
+    public Dealership getDealership(Long id) throws DealershipExceptions {
         return this.dealershipRepository
                 .findById(id)
                 .orElseThrow(() -> new DealershipExceptions("Dealership not found"));

@@ -1,10 +1,13 @@
 package com.example.projectspring.controllers;
 
+import com.example.projectspring.dto.CarDto;
 import com.example.projectspring.exceptions.CarException;
 import com.example.projectspring.exceptions.DealershipExceptions;
 import com.example.projectspring.models.Car;
+import com.example.projectspring.models.Dealership;
 import com.example.projectspring.models.Invoice;
 import com.example.projectspring.services.CarService;
+import com.example.projectspring.services.DealershipService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +22,16 @@ import java.util.List;
 public class CarController {
 
     private final CarService carService;
-
+    private final DealershipService dealershipService;
     @PostMapping(path = "/add/{dealershipId}")
-    public ResponseEntity<Long> add(@Validated @RequestBody Car car, @PathVariable Long dealershipId) throws DealershipExceptions {
+    public ResponseEntity<Long> add(@Validated @RequestBody CarDto carDto, @PathVariable Long dealershipId) throws DealershipExceptions {
+        Dealership dealership = dealershipService.getDealership(dealershipId);
 
-        return ResponseEntity.ok(this.carService.addCar(car, dealershipId));
+        return ResponseEntity.ok(this.carService.addCar(carDto, dealership));
     }
 
     @DeleteMapping(path = "/car.delete/{id}")
-    public void remove(@RequestParam Long id) throws CarException {
+    public void remove(@PathVariable Long id) throws CarException {
         this.carService.removeCar(id);
     }
 
@@ -50,8 +54,8 @@ public class CarController {
     }
 
     // todo mapper
-    @DeleteMapping(path = "car.sellCar/{id}")
-    public ResponseEntity<Long> sellCar(@RequestParam(name = "id") Long id,
+    @DeleteMapping(path = "/car.sellCar/{id}")
+    public ResponseEntity<Long> sellCar(@PathVariable(name = "id") Long id,
                            @RequestBody String customerName) throws CarException {
 
         return ResponseEntity
