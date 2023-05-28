@@ -18,48 +18,27 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
+@RequestMapping(path = "/car")
 @AllArgsConstructor
 public class CarController {
 
     private final CarService carService;
-    private final DealershipService dealershipService;
-    @PostMapping(path = "/add/{dealershipId}")
-    public ResponseEntity<Long> add(@Validated @RequestBody CarDto carDto, @PathVariable Long dealershipId) throws DealershipExceptions {
-        Dealership dealership = dealershipService.getDealership(dealershipId);
+    @PostMapping(path = "/add")
+    public ResponseEntity<Long> add(@Validated @RequestBody CarDto carDto) throws DealershipExceptions {
 
-        return ResponseEntity.ok(this.carService.addCar(carDto, dealership));
+        return ResponseEntity.ok(this.carService.addCarDto(carDto));
     }
 
-    @DeleteMapping(path = "/car.delete/{id}")
-    public void remove(@PathVariable Long id) throws CarException {
+    @DeleteMapping(path = "/delete")
+    public void remove(@RequestParam(name = "id", required = true) Long id) throws CarException {
         this.carService.removeCar(id);
     }
 
-    @PostMapping(path = "/car.searchCars")
-    public ResponseEntity<List<Car>> searchCars(@RequestParam(name = "make") String make,
-                           @RequestParam(name = "model") String model,
-                           @RequestParam(name = "year") int year,
-                           @RequestParam(name = "price") BigDecimal price
-    ) throws CarException {
-        // todo map cars -> list ids
-        return ResponseEntity
-                .ok(this.carService.searchCars(make, model, year, price));
-    }
 
-    // todo mapper
-    @GetMapping(path = "/car.getAll")
+    @GetMapping(path = "/getAll")
     public ResponseEntity<List<Car>> getAll() {
         return ResponseEntity
                 .ok(this.carService.getAllCars());
-    }
-
-    // todo mapper
-    @DeleteMapping(path = "/car.sellCar/{id}")
-    public ResponseEntity<Long> sellCar(@PathVariable(name = "id") Long id,
-                           @RequestBody String customerName) throws CarException {
-
-        return ResponseEntity
-                .ok(this.carService.sellCar(id, customerName));
     }
 
     @PutMapping(path = "/update")

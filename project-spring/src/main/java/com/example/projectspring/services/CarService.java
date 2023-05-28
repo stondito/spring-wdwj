@@ -27,21 +27,14 @@ import java.util.Optional;
 public class CarService {
 
     private final CarRepositoryI carRepository;
-    private final SaleService saleService;
-    private final InvoiceService invoiceService;
-    //private final DealershipService dealershipService;
     private final ModelMapper mapper;
 
-    public Long addCar(CarDto carDto, Dealership dealership) throws DealershipExceptions {
+    public Long addCarDto(CarDto carDto) {
         log.debug("Adding car");
         log.info("Adding car");
         log.error("Adding car");
 
-        //Dealership dealership = dealershipService.getDealership(carDto.getDealershipId());
-
         Car car = mapper.map(carDto, Car.class);
-
-        //car.setCarDealership(dealership);
         Car car1 = carRepository.save(car);
 
         return car1.getId();
@@ -81,23 +74,9 @@ public class CarService {
         return carRepository.findAll();
     }
 
-    public Long sellCar(Long id, String customerName) throws CarException {
-        log.debug("Sell car");
-        log.info("Sell car");
-        log.error("Sell car");
-
-        Car car = this.carRepository.findById(id).
-                orElseThrow(() -> new CarException("no such car"));
-
-        Invoice invoice = invoiceService.getInvoiceByName(customerName);
-
-        return this.saleService.sellCar(car, invoice);
-    }
 
     public Long update(Car car) throws CarException {
-        Car carToUpdate = this.carRepository
-                            .findById(car.getId())
-                            .orElseThrow(() -> new CarException("Car not found"));
+        Car carToUpdate = get(car.getId());
 
         carToUpdate.setModel(car.getModel());
         carToUpdate.setCarDealership(car.getCarDealership());
@@ -109,6 +88,12 @@ public class CarService {
         carToUpdate.setYear(car.getYear());
 
         return this.carRepository.save(carToUpdate).getId();
+    }
+
+    public Car get(Long id) throws CarException {
+        return this.carRepository
+                .findById(id)
+                .orElseThrow(() -> new CarException("Car not found"));
     }
 
 }

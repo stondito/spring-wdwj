@@ -1,31 +1,42 @@
 package com.example.projectspring.services;
 
+import com.example.projectspring.dto.SaleDto;
+import com.example.projectspring.exceptions.CarException;
 import com.example.projectspring.exceptions.SaleException;
 import com.example.projectspring.models.Car;
 import com.example.projectspring.models.Invoice;
 import com.example.projectspring.models.Sale;
 import com.example.projectspring.repos.SaleRepositoryI;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class SaleService {
 
     private final SaleRepositoryI saleRepository;
+    private final CarService carService;
+    private final ModelMapper mapper;
+    //public List<Car> getSalesByMake(String make) {
+//        return this.saleRepository.findCarByMake(make);
+//    }
 
-    public List<Car> getSalesByMake(String make) {
-        return this.saleRepository.findCarByMake(make);
-    }
+    public Long sellCar(Long carId, SaleDto saleDto) throws CarException {
+        log.debug("Sell car");
+        log.info("Sell car");
+        log.error("Sell car");
 
-    public Long sellCar(Car car, Invoice invoice) {
-        Sale sale = new Sale();
+        Car car = carService.get(carId);
+
+        Sale sale = mapper.map(saleDto, Sale.class);
         sale.setCar(car);
-        sale.setInvoice(invoice);
 
-        return this.saleRepository.save(sale).getId();
+        return saleRepository.save(sale).getId();
     }
 
     public Sale getSale(Long id) throws SaleException {

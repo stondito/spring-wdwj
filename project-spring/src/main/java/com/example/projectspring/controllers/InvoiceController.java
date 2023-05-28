@@ -11,24 +11,25 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
+@RequestMapping(path = "/invoice")
 @AllArgsConstructor
 public class InvoiceController {
 
     private final InvoiceService service;
 
-    @PostMapping(path = "/invoice.add") // може да се върне обекта или само ID
+    @PostMapping(path = "/add")
     public ResponseEntity<Long> addInvoice(@RequestBody Invoice invoice) {
         return ResponseEntity
                 .ok(this.service.addInvoice(invoice));
     }
 
-    @GetMapping(path = "/invoice.history")
+    @GetMapping(path = "/history")
     public ResponseEntity<List<Invoice>> getInvoiceHistory() {
 
         return ResponseEntity.ok(this.service.getInvoiceHistory());
     }
 
-    @GetMapping(path = "/invoice.totalPrice")
+    @GetMapping(path = "/totalPrice")
     public ResponseEntity<BigDecimal> calculateTotalPrice(@RequestBody Invoice invoice) {
 
         return ResponseEntity.ok(this.service.calculateTotalPrice(invoice));
@@ -38,5 +39,11 @@ public class InvoiceController {
     public ResponseEntity<Long> update(@RequestBody Invoice invoice) throws InvoiceException {
         return ResponseEntity.ok(this.service.update(invoice));
     }
+
+//    @DeleteMapping(path = "/invoice")
+//    public ResponseEntity<Long> deleteInvoice(@RequestParam(name = "id", required = true) Long id) {
+//        //return service.
+//    }
+
 
 }

@@ -15,17 +15,15 @@ public class SaleController {
     private final SaleService service;
 
     @GetMapping(path = "/get")
-    public Sale getSale(@RequestBody Long id) throws SaleException {
+    public Sale getSale(@RequestParam(name = "id", required = true) Long id) throws SaleException {
         return service.getSale(id);
     }
 
     @DeleteMapping(path = "/delete")
-    public void deleteSale(@RequestBody Long id) throws SaleException {
+    public void deleteSale(@RequestParam(name = "id", required = true) Long id) throws SaleException {
         service.deleteSell(id);
     }
 
-    // todo
-    // sale have One to One with Car and invoice so need dto
     @PostMapping(path = "/add")
     public Long addSale(@RequestBody Sale sale) {
         return service.add(sale);

@@ -15,10 +15,7 @@ public class SalesPersonService {
     private final SalesPersonRepository salesPersonRepository;
     private final DealershipService dealershipService;
 
-    public Long add(SalesPerson salesPerson, Long id) throws DealershipExceptions {
-        Dealership dealership = dealershipService.getDealership(id);
-
-        salesPerson.setDealership(dealership);
+    public Long add(SalesPerson salesPerson) {
 
         return salesPersonRepository.save(salesPerson).getId();
     }

@@ -17,7 +17,7 @@ public class Sale {
     @Column(name = "total_price")
     private double totalPrice;
 
-    @Column(name = "sale")
+    @Column(name = "make")
     private String make;
 
     @OneToOne

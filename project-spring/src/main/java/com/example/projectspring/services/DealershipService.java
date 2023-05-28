@@ -6,6 +6,7 @@ import com.example.projectspring.exceptions.DealershipExceptions;
 import com.example.projectspring.models.Car;
 import com.example.projectspring.models.Dealership;
 import com.example.projectspring.models.Invoice;
+import com.example.projectspring.models.SalesPerson;
 import com.example.projectspring.repos.DealershipRepositoryI;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,76 +25,34 @@ import java.util.Map;
 @AllArgsConstructor
 public class DealershipService {
 
-    private final CarService carService;
-    private final InvoiceService invoiceService;
     private final DealershipRepositoryI dealershipRepository;
-    private final SaleService saleService;
 
+//    public Map<String, Integer> getSalesByMake(String make) {
+//        log.debug("Sales by make");
+//        log.info("Sales by make");
+//        log.error("Sales by make");
+//
+//        List<Invoice> invoices = invoiceService.getInvoiceHistory();
+//        Map<String, Integer> salesByMake = new HashMap<>();
+//
+//        int salesCount = saleService.getSalesByMake(make).size();
+//
+//        salesByMake.put(make, salesCount);
+//
+//        return salesByMake;
+//    }
 
-    public void removeCar(Long id) throws CarException {
-        log.debug("Remove car");
-        log.info("Remove car");
-        log.error("Remove car");
-
-
-        carService.removeCar(id);
-    }
-
-    public List<Car> searchCars(String make, String model, int year, BigDecimal price) throws CarException {
-        log.debug("Search car");
-        log.info("Search car");
-        log.error("Search car");
-
-        return carService.searchCars(make, model, year, price);
-    }
-
-    public void sellCar(Long carId, String customerName, BigDecimal price) throws CarException {
-        log.debug("Sell car");
-        log.info("Sell car");
-        log.error("Sell car");
-
-
-        Invoice invoice = invoiceService.getInvoiceByName(customerName);
-
-        if (invoice == null) {
-            invoice = new Invoice();
-            invoice.setCustomerName(customerName);
-            invoice.setSalesPrice(price);
-            invoice.setPurchaseDate(LocalDate.now());
-        }
-
-        invoiceService.addInvoice(invoice);
-
-        carService.removeCar(carId);
-    }
-
-
-    public Map<String, Integer> getSalesByMake(String make) {
-        log.debug("Sales by make");
-        log.info("Sales by make");
-        log.error("Sales by make");
-
-        List<Invoice> invoices = invoiceService.getInvoiceHistory();
-        Map<String, Integer> salesByMake = new HashMap<>();
-
-        int salesCount = saleService.getSalesByMake(make).size();
-
-        salesByMake.put(make, salesCount);
-
-        return salesByMake;
-    }
-
-    public double getTotalRevenue() {
-        log.debug("Get Revenue");
-        log.info("Get Revenue");
-        log.error("Get Revenue");
-
-        List<Invoice> invoices = invoiceService.getInvoiceHistory();
-
-        return invoices.stream()
-                .mapToDouble(a -> a.getSalesPrice().doubleValue())
-                .sum();
-    }
+//    public double getTotalRevenue() {
+//        log.debug("Get Revenue");
+//        log.info("Get Revenue");
+//        log.error("Get Revenue");
+//
+//        List<Invoice> invoices = invoiceService.getInvoiceHistory();
+//
+//        return invoices.stream()
+//                .mapToDouble(a -> a.getSalesPrice().doubleValue())
+//                .sum();
+//    }
 
     public Long add(Dealership dealership) {
         log.debug("Add dealership");

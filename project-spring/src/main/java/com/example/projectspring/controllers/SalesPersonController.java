@@ -15,18 +15,18 @@ public class SalesPersonController {
 
     private final SalesPersonService service;
 
-    @PostMapping(path = "/add/{dealershipId}")
-    public Long add(@RequestBody SalesPerson salesPerson, @PathVariable(name = "dealershipId") Long dealershipId) throws DealershipExceptions {
-        return this.service.add(salesPerson, dealershipId);
+    @PostMapping(path = "/add")
+    public Long add(@RequestBody SalesPerson salesPerson) {
+        return this.service.add(salesPerson);
     }
 
-    @GetMapping(path = "/get/{id}")
-    public ResponseEntity<SalesPerson> get(@PathVariable(name = "id") Long id) throws SalesPersonException {
+    @GetMapping(path = "/get")
+    public ResponseEntity<SalesPerson> get(@RequestParam(name = "id", required = true) Long id) throws SalesPersonException {
         return ResponseEntity.ok(this.service.get(id));
     }
 
-    @DeleteMapping(path = "/delete/{id}")
-    public void delete(@PathVariable(name = "id") Long id) throws SalesPersonException {
+    @DeleteMapping(path = "/delete")
+    public void delete(@RequestParam(name = "id", required = true) Long id) throws SalesPersonException {
         this.service.delete(id);
     }
 
