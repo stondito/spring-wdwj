@@ -13,7 +13,6 @@ public class ExceptionHandlerController {
 
     @ExceptionHandler(value = {DealershipExceptions.class})
     public ResponseEntity<Object> handleDealership(DealershipExceptions d, HttpServletRequest httpServletRequest) {
-        // todo class to use instead d.getMessage()
         d.setUri(httpServletRequest.getRequestURI());
         return new ResponseEntity<>(d, d.getHttpStatus());
     }
