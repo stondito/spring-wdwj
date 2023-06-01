@@ -14,10 +14,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,10 +47,7 @@ public class CarService {
         log.info("Remove car");
         log.error("Remove car");
 
-        Car car = carRepository.
-                    findById(id).
-                    orElseThrow(() -> new CarException("No such car"));
-
+        Car car = get(id);
         carRepository.delete(car);
     }
 
@@ -60,7 +59,12 @@ public class CarService {
         List<Car> carList = carRepository.findCarByMakeAndModelAndYearAndPrice(make, model, year, price);
 
         if (carList == null || carList.isEmpty()) {
-            throw new CarException("No found cars");
+            throw CarException
+                    .builder()
+                    .timeErr(LocalDateTime.now())
+                    .message("No cars found with given parameters")
+                    .httpStatus(HttpStatus.NOT_FOUND)// No Content ?
+                    .build();
         }
 
         return carList;
@@ -93,7 +97,13 @@ public class CarService {
     public Car get(Long id) throws CarException {
         return this.carRepository
                 .findById(id)
-                .orElseThrow(() -> new CarException("Car not found"));
+                .orElseThrow(() -> CarException
+                                    .builder()
+                                    .timeErr(LocalDateTime.now())
+                                    .message("Car not found with id:" + id)
+                                    .httpStatus(HttpStatus.NOT_FOUND)
+                                    .build()
+                );
     }
 
 }

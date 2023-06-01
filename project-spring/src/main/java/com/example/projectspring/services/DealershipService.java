@@ -11,10 +11,12 @@ import com.example.projectspring.repos.DealershipRepositoryI;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +79,13 @@ public class DealershipService {
     public Dealership getDealership(Long id) throws DealershipExceptions {
         return this.dealershipRepository
                 .findById(id)
-                .orElseThrow(() -> new DealershipExceptions("Dealership not found"));
+                .orElseThrow(() -> DealershipExceptions
+                                    .builder()
+                                    .message("Dealership not found with id:" + id)
+                                    .timeErr(LocalDateTime.now())
+                                    .httpStatus(HttpStatus.NOT_FOUND)
+                                    .build()
+                );
     }
 
     public Long update(Dealership dealership) throws DealershipExceptions {

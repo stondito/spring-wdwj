@@ -6,10 +6,12 @@ import com.example.projectspring.repos.InvoiceRepositoryI;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -55,9 +57,7 @@ public class InvoiceService {
     }
 
     public Long update(Invoice invoice) throws InvoiceException {
-        Invoice invoiceToUpdate = this.invoiceRepository
-                .findById(invoice.getId())
-                .orElseThrow(() -> new InvoiceException("Invoice not found"));
+        Invoice invoiceToUpdate = get(invoice.getId());
 
         invoiceToUpdate.setPurchaseDate(invoice.getPurchaseDate());
         invoiceToUpdate.setCustomerName(invoice.getCustomerName());
@@ -66,6 +66,18 @@ public class InvoiceService {
         invoiceToUpdate.setSalesPrice(invoice.getSalesPrice());
 
         return this.invoiceRepository.save(invoiceToUpdate).getId();
+    }
+
+    public Invoice get(Long id) {
+        return this.invoiceRepository
+                .findById(id)
+                .orElseThrow(() -> InvoiceException
+                                    .builder()
+                                    .timeErr(LocalDateTime.now())
+                                    .message("Invoice not found with id:" + id)
+                                    .httpStatus(HttpStatus.NOT_FOUND)
+                                    .build()
+                );
     }
 }
 

@@ -10,8 +10,10 @@ import com.example.projectspring.repos.SaleRepositoryI;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -42,13 +44,17 @@ public class SaleService {
     public Sale getSale(Long id) throws SaleException {
         return saleRepository
                 .findById(id)
-                .orElseThrow(() -> new SaleException("sale not found"));
+                .orElseThrow(() -> SaleException
+                                    .builder()
+                                    .timeErr(LocalDateTime.now())
+                                    .httpStatus(HttpStatus.NOT_FOUND)
+                                    .message("Sale not found with id: " +id)
+                                    .build()
+                );
     }
 
     public void deleteSell(Long id) throws SaleException {
-        Sale sale = saleRepository
-                .findById(id)
-                .orElseThrow(() -> new SaleException("sale not found"));
+        Sale sale = getSale(id);
 
         this.saleRepository.delete(sale);
     }
@@ -58,9 +64,7 @@ public class SaleService {
     }
 
     public Long update(Sale sale) throws SaleException {
-        Sale saleToUpdate = this.saleRepository
-                .findById(sale.getId())
-                .orElseThrow(() -> new SaleException("Sale not found"));
+        Sale saleToUpdate = getSale(sale.getId());
 
         saleToUpdate.setInvoice(sale.getInvoice());
         saleToUpdate.setCar(sale.getCar());

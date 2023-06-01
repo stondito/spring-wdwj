@@ -6,7 +6,10 @@ import com.example.projectspring.models.Dealership;
 import com.example.projectspring.models.SalesPerson;
 import com.example.projectspring.repos.SalesPersonRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
@@ -21,23 +24,26 @@ public class SalesPersonService {
     }
 
     public SalesPerson get(Long id) throws SalesPersonException {
+
         return this.salesPersonRepository
                 .findById(id)
-                .orElseThrow(() -> new SalesPersonException("No sales person found"));
+                .orElseThrow(() -> SalesPersonException
+                                    .builder()
+                                    .timeErr(LocalDateTime.now())
+                                    .message("SalesPerson not found with id:" + id)
+                                    .httpStatus(HttpStatus.NOT_FOUND)
+                                    .build()
+                );
     }
 
     public void delete(Long id) throws SalesPersonException {
-        SalesPerson salesPerson = this.salesPersonRepository
-                .findById(id)
-                .orElseThrow(() -> new SalesPersonException("No sales person found"));
+        SalesPerson salesPerson = get(id);
 
         this.salesPersonRepository.delete(salesPerson);
     }
 
     public Long update(SalesPerson salesPerson) throws SalesPersonException {
-        SalesPerson salesPersonToUpdate = this.salesPersonRepository
-                .findById(salesPerson.getId())
-                .orElseThrow(() -> new SalesPersonException("No sales person found"));
+        SalesPerson salesPersonToUpdate = get(salesPerson.getId());
 
         salesPerson.setDealership(salesPerson.getDealership());
         salesPerson.setEmail(salesPerson.getEmail());
