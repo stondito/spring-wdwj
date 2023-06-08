@@ -79,5 +79,9 @@ public class InvoiceService {
                                     .build()
                 );
     }
+
+    public List<Invoice> getAll() {
+        return invoiceRepository.findAll();
+    }
 }
 

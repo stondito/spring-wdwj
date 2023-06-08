@@ -4,7 +4,6 @@ import com.example.projectspring.dto.SaleDto;
 import com.example.projectspring.exceptions.CarException;
 import com.example.projectspring.exceptions.SaleException;
 import com.example.projectspring.models.Car;
-import com.example.projectspring.models.Invoice;
 import com.example.projectspring.models.Sale;
 import com.example.projectspring.repos.SaleRepositoryI;
 import lombok.AllArgsConstructor;
@@ -24,9 +23,6 @@ public class SaleService {
     private final SaleRepositoryI saleRepository;
     private final CarService carService;
     private final ModelMapper mapper;
-    //public List<Car> getSalesByMake(String make) {
-//        return this.saleRepository.findCarByMake(make);
-//    }
 
     public Long sellCar(Long carId, SaleDto saleDto) throws CarException {
         log.debug("Sell car");
@@ -73,6 +69,10 @@ public class SaleService {
         saleToUpdate.setTotalPrice(sale.getTotalPrice());
 
         return this.saleRepository.save(saleToUpdate).getId();
+    }
+
+    public List<Sale> getAll() {
+        return saleRepository.findAll();
     }
 
 }

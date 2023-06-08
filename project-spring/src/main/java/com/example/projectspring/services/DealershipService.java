@@ -1,26 +1,14 @@
 package com.example.projectspring.services;
 
-import com.example.projectspring.dto.CarDto;
-import com.example.projectspring.exceptions.CarException;
 import com.example.projectspring.exceptions.DealershipExceptions;
-import com.example.projectspring.models.Car;
 import com.example.projectspring.models.Dealership;
-import com.example.projectspring.models.Invoice;
-import com.example.projectspring.models.SalesPerson;
 import com.example.projectspring.repos.DealershipRepositoryI;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -28,33 +16,6 @@ import java.util.Map;
 public class DealershipService {
 
     private final DealershipRepositoryI dealershipRepository;
-
-//    public Map<String, Integer> getSalesByMake(String make) {
-//        log.debug("Sales by make");
-//        log.info("Sales by make");
-//        log.error("Sales by make");
-//
-//        List<Invoice> invoices = invoiceService.getInvoiceHistory();
-//        Map<String, Integer> salesByMake = new HashMap<>();
-//
-//        int salesCount = saleService.getSalesByMake(make).size();
-//
-//        salesByMake.put(make, salesCount);
-//
-//        return salesByMake;
-//    }
-
-//    public double getTotalRevenue() {
-//        log.debug("Get Revenue");
-//        log.info("Get Revenue");
-//        log.error("Get Revenue");
-//
-//        List<Invoice> invoices = invoiceService.getInvoiceHistory();
-//
-//        return invoices.stream()
-//                .mapToDouble(a -> a.getSalesPrice().doubleValue())
-//                .sum();
-//    }
 
     public Long add(Dealership dealership) {
         log.debug("Add dealership");

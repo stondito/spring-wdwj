@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-//@Builder
 public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,7 +36,7 @@ public class Invoice {
     public Invoice() {
     }
 
-    public Invoice(String customerName, LocalDate purchaseDate, Car car, BigDecimal salesPrice, BigDecimal taxRate) {
+    public Invoice(String customerName, LocalDate purchaseDate, BigDecimal salesPrice, BigDecimal taxRate) {
         this.customerName = customerName;
         this.purchaseDate = purchaseDate;
         this.salesPrice = salesPrice;
@@ -86,7 +85,6 @@ public class Invoice {
         return "Invoice{" +
                 "customerName='" + customerName + '\'' +
                 ", purchaseDate=" + purchaseDate +
-                //", car=" + car +
                 ", salesPrice=" + salesPrice +
                 ", taxRate=" + taxRate +
                 '}';
